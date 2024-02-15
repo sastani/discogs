@@ -9,7 +9,7 @@ class ReleaseObject():
         self.labels = list()
         self.tracks = list()
 
-    def get_artists(self)
+    def get_artists(self):
         return self.artists
 
     def get_labels(self):
