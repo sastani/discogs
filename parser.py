@@ -1,23 +1,6 @@
 from lxml import etree
 from collections import deque
-
-class ReleaseObject():
-    def __init__(self, id, status):
-        self.id = id
-        self.status = status
-        self.artists = list()
-        self.labels = list()
-        self.tracks = list()
-
-    def get_artists(self):
-        return self.artists
-
-    def get_labels(self):
-        return self.labels
-
-    def get_tracks(self):
-        return self.tracks
-
+from models.release import *
 
 def parse_xml(file_name):
     context = etree.iterparse(file_name, events=('start', 'end'))
@@ -32,7 +15,7 @@ def parse_xml(file_name):
             release_labels = list()
             release_id = element.get('id')
             release_status = element.get('status')
-            #release = ReleaseObject(release_id, release_status)
+            release = ReleaseObject(release_id, release_status)
         else:
             if event == "start" and tag == "artists":
                 for artist in element.iterchildren():
@@ -72,5 +55,3 @@ def add_attributes(d, element):
     for a in attributes:
         val = attributes[a]
         d[prefix + "_" + a] = val
-
-parse_xml('/Volumes/WD Black/Discogs/sample_release/release-3068908.xml')
