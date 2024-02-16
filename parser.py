@@ -4,17 +4,21 @@ from models.release import *
 
 def parse_xml(file_name):
     context = etree.iterparse(file_name, events=('start', 'end'))
-    #event, root = next(context)
-    #attributes = ["id"]
+    #advance iterator to root element
+    event, root = next(context)
+    context = etree.iterwalk(root, events=('start','end'))
+    #advance iterator to release/child of root
+    next(context)
     all_releases = deque()
+
     for event, element in context:
         tag = element.tag
-        #if we have found "start" of release, build release object
+        # if we have found "start" of release, build release object
         if event == "start" and tag == "release":
             release_id = element.get('id')
             release_status = element.get('status')
             release = ReleaseObject(release_id, release_status)
-        #if we have found "end" of release, add release object to queue
+        # if we have found "end" of release, add release object to queue
         elif event == "end" and tag == "release":
             all_releases.append(release)
         else:
@@ -23,18 +27,16 @@ def parse_xml(file_name):
                     artist_row = dict()
                     add_children(artist_row, artist)
                     release.get_artists().append(artist_row)
-                    #print(release.get_artists())
+                    # print(release.get_artists())
             elif event == "start" and tag == "title":
-                parent = element.getparent()
-                if parent.tag == "release":
-                    release.set_title(element.text)
-                    #print(release.get_title())
+                release.set_title(element.text)
+                # print(release.get_title())
             elif event == "start" and tag == "labels":
                 for label in element.iterchildren():
                     label_row = dict()
                     add_attributes(label_row, label)
                     release.get_labels().append(label_row)
-                    #print(release.get_labels())
+                    # print(release.get_labels())
             elif event == "start" and tag == "tracklist":
                 for track in element.iterchildren():
                     track_row = dict()
@@ -42,7 +44,9 @@ def parse_xml(file_name):
                     add_children(track_row, track)
                     track_row['release_id'] = release_id
                     release_tracks.append(track_row)
-    return release
+            #skip parsing any children/descendants of release
+            context.skip_subtree()
+    return all_releases
 
 def add_children(d, element):
     #use "track", "artist", etc as prefix for key
