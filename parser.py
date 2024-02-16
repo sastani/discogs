@@ -13,6 +13,7 @@ def parse_xml(file_name):
 
     for event, element in context:
         tag = element.tag
+        text = element.text
         # if we have found "start" of release, build release object
         if event == "start" and tag == "release":
             release_id = element.get('id')
@@ -55,6 +56,10 @@ def parse_xml(file_name):
                     if val is not None:
                         style_row[key] = val
                     release.get_styles().append(style_row)
+            elif event == "start" and tag == "country":
+                release.set_country(text)
+            elif event == "start" and tag == "released":
+                release.set_release_date(text)
             elif event == "start" and tag == "tracklist":
                 for track in element.iterchildren():
                     track_row = dict()

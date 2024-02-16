@@ -3,6 +3,8 @@ class ReleaseObject:
         self.id = id
         self.status = status
         self.title = ""
+        self.release_date = ""
+        self.country = ""
         self.artists = list()
         self.labels = list()
         self.tracks = list()
@@ -12,8 +14,17 @@ class ReleaseObject:
     def set_title(self, title):
         self.title = title
 
+    def set_release_date(self, date):
+        self.release_date = date
+
+    def set_country(self, country):
+        self.country = country
+
     def get_release(self):
-        return ("id:" + self.id + " status:" + self.status + " title:" + self.title)
+        fields = ["id", "status", "title", "release_date", "country"]
+        values = [self.id, self.status, self.title, self.release_date, self.country]
+        rel = dict(zip(fields, values))
+        return rel
 
     def get_artists(self):
         return self.artists
