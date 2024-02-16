@@ -38,6 +38,16 @@ def parse_xml(file_name):
                     add_attributes(label_row, label)
                     release.get_labels().append(label_row)
                     # print(release.get_labels())
+            elif event == "start" and tag == "formats":
+                for format in element.iterchildren():
+                    format_row = dict()
+                    format_description = list()
+                    for descriptions in format:
+                        for description in descriptions:
+                            format_description.append(description.text)
+                    format_row['release_id'] = release_id
+                    format_row['description'] = format_description
+                    release.get_formats().append(format_row)
             elif event == "start" and tag == "genres":
                 for genre in element.iterchildren():
                     genre_row = dict()

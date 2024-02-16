@@ -7,6 +7,7 @@ class ReleaseObject:
         self.country = ""
         self.artists = list()
         self.labels = list()
+        self.formats = list()
         self.tracks = list()
         self.genres = list()
         self.styles = list()
@@ -31,6 +32,9 @@ class ReleaseObject:
 
     def get_labels(self):
         return self.labels
+
+    def get_formats(self):
+        return self.formats
 
     def get_genres(self):
         return self.genres
