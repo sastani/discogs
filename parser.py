@@ -37,13 +37,30 @@ def parse_xml(file_name):
                     add_attributes(label_row, label)
                     release.get_labels().append(label_row)
                     # print(release.get_labels())
+            elif event == "start" and tag == "genres":
+                for genre in element.iterchildren():
+                    genre_row = dict()
+                    genre_row['release_id'] = release_id
+                    key = genre.tag
+                    val = genre.text
+                    if val is not None:
+                        genre_row[key] = val
+                    release.get_genres().append(genre_row)
+            elif event == "start" and tag =="styles":
+                for style in element.iterchildren():
+                    style_row = dict()
+                    style_row['release_id'] = release_id
+                    key = style.tag
+                    val = style.text
+                    if val is not None:
+                        style_row[key] = val
+                    release.get_styles().append(style_row)
             elif event == "start" and tag == "tracklist":
                 for track in element.iterchildren():
                     track_row = dict()
-                    release_tracks = release.get_tracks()
-                    add_children(track_row, track)
                     track_row['release_id'] = release_id
-                    release_tracks.append(track_row)
+                    add_children(track_row, track)
+                    release.get_tracks().append(track_row)
             #skip parsing any children/descendants of release
             context.skip_subtree()
     return all_releases
@@ -56,6 +73,13 @@ def add_children(d, element):
         val = child.text
         if val is not None:
             d[prefix + "_" + key] = val
+
+def add_children_only(d, element):
+    key = element.tag
+    val = element.text
+    if val is not None:
+        d[key] = val
+
 
 def add_attributes(d, element):
     prefix = element.tag

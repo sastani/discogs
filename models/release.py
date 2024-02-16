@@ -6,6 +6,8 @@ class ReleaseObject:
         self.artists = list()
         self.labels = list()
         self.tracks = list()
+        self.genres = list()
+        self.styles = list()
 
     def set_title(self, title):
         self.title = title
@@ -18,6 +20,12 @@ class ReleaseObject:
 
     def get_labels(self):
         return self.labels
+
+    def get_genres(self):
+        return self.genres
+
+    def get_styles(self):
+        return self.styles
 
     def get_tracks(self):
         return self.tracks
