@@ -24,8 +24,8 @@ class ReleaseObject:
     def get_release(self):
         fields = ["id", "status", "title", "release_date", "country"]
         values = [self.id, self.status, self.title, self.release_date, self.country]
-        rel = dict(zip(fields, values))
-        return rel
+        release = dict(zip(fields, values))
+        return release
 
     def get_artists(self):
         return self.artists

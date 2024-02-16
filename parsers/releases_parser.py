@@ -1,6 +1,6 @@
 from lxml import etree
 from collections import deque
-from models.release import *
+from models.release import ReleaseObject
 
 def parse_xml(file_name):
     context = etree.iterparse(file_name, events=('start', 'end'))
