@@ -22,8 +22,8 @@ class ArtistObject:
         self.profile = profile
 
     def get_artist(self):
-        fields = ["id", "artist_name", "name", "quality", "profile"]
-        values = [self.id, self.artist_name, self.name, self.quality, self.profile]
+        fields = ["id", "artist_name", "name", "quality", "profile", "name_variations"]
+        values = [self.id, self.artist_name, self.name, self.quality, self.profile, self.name_variations]
         artist = dict(zip(fields, values))
         return artist
 
