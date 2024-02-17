@@ -46,7 +46,6 @@ def parse_xml(file_name):
                     artist_urls = artist.get_urls()
                     for url in child_element.iterchildren():
                         artist_url_row = dict()
-                        artist_url_row['artist_id'] = artist_id
                         url_path = url.text
                         artist_url_row['url'] = url_path
                         webpage_type = extract_webpage(url_path)
@@ -63,7 +62,6 @@ def parse_xml(file_name):
                     aliases = artist.get_aliases()
                     for alias in child_element.iterchildren():
                         artist_aliases_row = dict()
-                        artist_aliases_row['artist_id'] = artist_id
                         artist_aliases_row['id'] = alias.get('id')
                         artist_aliases_row['alias'] = alias.text
                         aliases.append(artist_aliases_row)
@@ -72,13 +70,13 @@ def parse_xml(file_name):
                     groups = artist.get_groups()
                     for group in child_element.iterchildren():
                         artist_groups_row = dict()
-                        artist_groups_row['artist_id'] = artist_id
                         artist_groups_row['id'] = group.get('id')
                         artist_groups_row['group'] = group.text
                         groups.append(artist_groups_row)
         # if we have found "end" of release, add release object to queue
         elif event == "end" and tag == "artist":
             all_artists.append(artist)
+        context.skip_subtree()
     return all_artists
 
 def extract_webpage(url):

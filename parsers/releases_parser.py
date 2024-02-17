@@ -42,30 +42,21 @@ def parse_xml(file_name):
                 for format in element.iterchildren():
                     format_row = dict()
                     format_description = list()
+                    format_row['format'] = format.get('name')
+                    format_row['quantity'] = format.get('qty')
                     for descriptions in format:
                         for description in descriptions:
                             format_description.append(description.text)
-                    format_row['release_id'] = release_id
                     format_row['description'] = format_description
                     release.get_formats().append(format_row)
             elif event == "start" and tag == "genres":
                 for genre in element.iterchildren():
-                    genre_row = dict()
-                    genre_row['release_id'] = release_id
-                    key = genre.tag
-                    val = genre.text
-                    if val is not None:
-                        genre_row[key] = val
-                    release.get_genres().append(genre_row)
+                    genre_val = genre.text
+                    release.get_genres().append(genre_val)
             elif event == "start" and tag =="styles":
                 for style in element.iterchildren():
-                    style_row = dict()
-                    style_row['release_id'] = release_id
-                    key = style.tag
-                    val = style.text
-                    if val is not None:
-                        style_row[key] = val
-                    release.get_styles().append(style_row)
+                    style_val = style.text
+                    release.get_styles().append(style_val)
             elif event == "start" and tag == "country":
                 release.set_country(text)
             elif event == "start" and tag == "released":
@@ -73,7 +64,6 @@ def parse_xml(file_name):
             elif event == "start" and tag == "tracklist":
                 for track in element.iterchildren():
                     track_row = dict()
-                    track_row['release_id'] = release_id
                     add_children(track_row, track)
                     release.get_tracks().append(track_row)
             #skip parsing any children/descendants of release
@@ -81,13 +71,11 @@ def parse_xml(file_name):
     return all_releases
 
 def add_children(d, element):
-    #use "track", "artist", etc as prefix for key
-    prefix = element.tag
     for child in element:
         key = child.tag
         val = child.text
         if val is not None:
-            d[prefix + "_" + key] = val
+            d[key] = val
 
 def add_children_only(d, element):
     key = element.tag
