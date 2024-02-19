@@ -1,10 +1,10 @@
-class ArtistObject:
+class Artist:
     def __init__(self, id, artist_name):
         self.id = id
         self.artist_name = artist_name
-        self.name = ""
-        self.quality = ""
-        self.profile = ""
+        self.name = None
+        self.quality = None
+        self.profile = None
 
         self.urls = list()
         self.name_variations = list()

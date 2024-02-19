@@ -1,10 +1,10 @@
-class ReleaseObject:
+class Release:
     def __init__(self, id, status):
         self.id = id
         self.status = status
-        self.title = ""
-        self.release_date = ""
-        self.country = ""
+        self.title = None
+        self.release_date = None
+        self.country = None
         self.artists = list()
         self.labels = list()
         self.formats = list()
