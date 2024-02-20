@@ -5,12 +5,15 @@ class Release:
         self.title = None
         self.release_date = None
         self.country = None
+        self.notes = None
+        self.quality = None
         self.artists = list()
         self.labels = list()
         self.formats = list()
         self.tracks = list()
         self.genres = list()
         self.styles = list()
+
 
     def set_title(self, title):
         self.title = title
@@ -20,6 +23,12 @@ class Release:
 
     def set_country(self, country):
         self.country = country
+
+    def set_notes(self, notes):
+        self.notes = notes
+
+    def set_quality(self, quality):
+        self.quality = quality
 
     def get_release(self):
         fields = ["id", "status", "title", "release_date", "country"]

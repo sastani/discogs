@@ -23,7 +23,7 @@ class Label:
         self.profile = profile
 
     def get_label(self):
-        fields = ["id", "label_name", "parent_label", "contact_info", "quality", "profile",]
+        fields = ["id", "label_name", "parent_label", "contact_info", "quality", "profile"]
         values = [self.id, self.label_name, self.parent_label, self.contact_info, self.quality, self.profile]
         label = dict(zip(fields, values))
         return label
