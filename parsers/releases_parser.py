@@ -3,24 +3,37 @@ from collections import deque
 from models.release import Release
 from parsers.utils import *
 
-def parse_xml(file_name):
+def pop_last(all_releases):
+    if len(all_releases) != 0:
+        r = all_releases.pop()
+        print("release:", r.get_release(), sep=' ')
+        print("artists: ", r.get_artists(), sep=' ')
+        print("labels: ", r.get_labels(), sep=' ')
+        print("tracklist: ", r.get_tracks(), sep=' ')
+        print("genres: ", r.get_genres(), sep=' ')
+        print("styles: ", r.get_styles(), sep=' ')
+        print("formats: ", r.get_formats(), sep=' ')
+def parse_xml(file_name, chunk_size):
     context = etree.iterparse(file_name, events=('start', 'end'))
+    context = iter(context)
     #advance iterator to root element
     event, root = next(context)
-    context = etree.iterwalk(root, events=('start','end'))
-    #advance iterator to release/child of root
-    next(context)
+
     all_releases = deque()
+    counter = 0
 
     for event, element in context:
-        tag = element.tag
-        text = element.text
-        # if we have found "start" of release, build release object
-        if event == "start" and tag == "release":
+        release_tag = element.tag
+        if counter == chunk_size:
+            empty_queue(all_releases)
+            counter = 0
+        if event == "start" and release_tag == "release":
             release_element = element
             release_id = element.get('id')
             release_status = element.get('status')
             release = Release(release_id, release_status)
+            print("release: " + str(counter))
+            #pop_last(all_releases)
             for child in release_element.iterchildren():
                 text = child.text
                 tag = child.tag
@@ -76,14 +89,29 @@ def parse_xml(file_name):
                         add_children(track_row, track)
                         release.get_tracks().append(track_row)
         # if we have found "end" of release, add release object to queue
-        elif event == "end" and tag == "release":
+        if event == "end" and release_tag == "release":
             all_releases.append(release)
-        else:
-            pass
+            counter += 1
+            root.clear()
+        #empty any remaining objects in queue
+        if not all_releases:
+            empty_queue(all_releases)
 
        #context.skip_subtree()
 
         #element.clear()
         #skip parsing any children/descendants of release
         #context.skip_subtree()
-    return all_releases
+    #return all_releases
+
+def empty_queue(releases):
+    while releases:
+        print("-----------------")
+        r = releases.pop()
+        print("release:", r.get_release(), sep=' ')
+        print("artists: ", r.get_artists(), sep=' ')
+        print("labels: ", r.get_labels(), sep=' ')
+        print("tracklist: ", r.get_tracks(), sep=' ')
+        print("genres: ", r.get_genres(), sep=' ')
+        print("styles: ", r.get_styles(), sep=' ')
+        print("formats: ", r.get_formats(), sep=' ')
