@@ -23,7 +23,7 @@ CREATE TABLE artist_aliases(
 CREATE TABLE artist_urls(
     artist_id INT references artists(artist_id),
     url VARCHAR,
-    page_type VARCHAR
+    page_type VARCHAR,
     PRIMARY KEY(artist_id, url)
 );
 
@@ -43,14 +43,14 @@ CREATE TABLE labels(
 CREATE TABLE label_sub_labels(
     label_id INT references labels(label_id),
     sub_label_id INT references labels(label_id),
-    sub_label_name VARCHAR
+    sub_label_name VARCHAR,
     PRIMARY KEY (label_id, sub_label_id)
 );
 
 CREATE TABLE label_urls(
     label_id INT references labels(label_id),
     url VARCHAR,
-    page_type VARCHAR
+    page_type VARCHAR,
     PRIMARY KEY(label_id, url)
 );
 
@@ -73,7 +73,7 @@ CREATE TABLE release_artists
     release_id  INT references releases (release_id),
     artist_id   INT references artists (artist_id),
     artist_name VARCHAR,
-    join_string VARCHAR
+    join_string VARCHAR,
     PRIMARY KEY (release_id, artist_id)
 );
 
@@ -105,7 +105,7 @@ CREATE TABLE release_labels
     release_id INT references releases(release_id),
     label_id INT references labels(label_id),
     label_name VARCHAR,
-    catalog_num VARCHAR
+    catalog_num VARCHAR,
     PRIMARY KEY(release_id, label_id)
 );
 
