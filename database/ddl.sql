@@ -31,9 +31,9 @@ CREATE TABLE artist_urls(
 /* DDL FOR label entities*/
 CREATE TABLE labels(
     label_id INT PRIMARY KEY,
+    label_name VARCHAR,
     parent_label_id INT,
     parent_label_name VARCHAR,
-    label_name VARCHAR,
     contact_info VARCHAR,
     profile VARCHAR,
     data_quality VARCHAR
@@ -73,6 +73,7 @@ CREATE TABLE release_artists
     release_id  INT references releases (release_id),
     artist_id   INT references artists (artist_id),
     artist_name VARCHAR,
+    ordinal INT,
     join_string VARCHAR,
     PRIMARY KEY (release_id, artist_id)
 );
@@ -119,14 +120,14 @@ CREATE TABLE release_formats
 );
 
 /*DDL for master release to release entities*/
-CREATE TABLE master_main_release
-(
-    master_id INT PRIMARY KEY,
-    main_release_id INT references releases(release_id)
-)
-
 CREATE TABLE master_releases
 (
     master_id INT PRIMARY KEY,
     release_id INT references releases(release_id)
-)
+);
+
+CREATE TABLE master_main_release
+(
+    master_id INT PRIMARY KEY,
+    main_release_id INT references releases(release_id)
+);
