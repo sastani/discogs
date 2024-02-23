@@ -2,11 +2,13 @@ class Release:
     def __init__(self, id, status):
         self.id = id
         self.status = status
+        self.is_main_release = False
         self.title = None
         self.release_date = None
         self.country = None
         self.notes = None
         self.quality = None
+        self.master_id = None
         self.artists = list()
         self.labels = list()
         self.formats = list()
@@ -29,6 +31,12 @@ class Release:
 
     def set_quality(self, quality):
         self.quality = quality
+
+    def set_master(self, master):
+        self.master = master
+
+    def set_is_main_release(self):
+        self.is_main_release = True
 
     def get_release(self):
         fields = ["id", "status", "title", "release_date", "country"]
@@ -53,3 +61,4 @@ class Release:
 
     def get_tracks(self):
         return self.tracks
+

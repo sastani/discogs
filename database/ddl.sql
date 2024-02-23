@@ -117,3 +117,16 @@ CREATE TABLE release_formats
     description_arr VARCHAR[],
     PRIMARY KEY(release_id, format)
 );
+
+/*DDL for master release to release entities*/
+CREATE TABLE master_main_release
+(
+    master_id INT PRIMARY KEY,
+    main_release_id INT references releases(release_id)
+)
+
+CREATE TABLE master_releases
+(
+    master_id INT PRIMARY KEY,
+    release_id INT references releases(release_id)
+)

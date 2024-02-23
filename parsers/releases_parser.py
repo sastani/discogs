@@ -83,6 +83,11 @@ def parse_xml(file_name, chunk_size):
                     release.set_notes(text)
                 elif tag == "data_quality":
                     release.set_quality(text)
+                elif tag =="master_id":
+                    release.set_master(text)
+                    main_release = child.get('is_main_release')
+                    if main_release:
+                        release.set_is_main_release()
                 elif tag == "tracklist":
                     for track in child.iterchildren():
                         track_row = dict()
