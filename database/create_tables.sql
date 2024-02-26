@@ -114,7 +114,7 @@ CREATE TABLE release_labels
     release_id INT,
     label_id INT,
     label_name VARCHAR,
-    catalog_num VARCHAR,
+    catalog_nums VARCHAR[],
     PRIMARY KEY(release_id, label_id)
 );
 
