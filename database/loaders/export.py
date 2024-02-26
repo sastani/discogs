@@ -34,7 +34,7 @@ release =\
         "release_genres": ["release_id", "genre"],
         "release_styles": ["release_id", "style"],
         "release_tracks": ["release_id", "track_title", "track_number", "position", "duration"],
-        "release_labels": ["release_id", "label_id", "label_name", "catalog_num"],
+        "release_labels": ["release_id", "label_id", "label_name", "catalog_nums"],
         "release_formats": ["release_id", "format", "quantity", "description_arr"],
         "release_master": ["release_id", "master_id", "is_main_release"],
     }
@@ -47,10 +47,11 @@ class Exporter:
 
     def loader(self, q, entity_type):
         entity = entity_map[entity_type]
-        while q:
-            curr = q.pop()
-            for table_name in entity:
-                cols = entity[table_name]
+        for table_name in entity:
+            table_values = list()
+            cols = entity[table_name]
+            flatten = False
+            for curr in q:
                 #get values
                 if table_name in ["releases", "labels", "artists", "release_master"]:
                     if table_name == "releases":
@@ -61,25 +62,31 @@ class Exporter:
                         values = curr.get_artist()
                     else:
                         values = curr.get_release_master()
-                    query = (sql.SQL("INSERT INTO {} ({}) VALUES ({})")
-                         .format(sql.Identifier(table_name),
-                                 sql.SQL(', ').join(map(sql.Identifier, cols)),
-                                 sql.SQL(', ').join(sql.Placeholder() * len(cols))))
-                    self.cur.execute(query, values)
-                    self.conn.commit()
                 else:
+                    flatten = True
                     method_name = "get_" + table_name
                     instance_method = getattr(curr, method_name)
                     values = instance_method()
-                    print(values)
-                    query = (sql.SQL("INSERT INTO {} ({}) VALUES ({})")
-                            .format(sql.Identifier(table_name),
-                            sql.SQL(', ').join(map(sql.Identifier, cols)),
-                            sql.SQL(', ').join(sql.Placeholder() * len(cols))))
-                    print(query.as_string(self.conn))
-                    self.cur.executemany(query, values)
-                    self.conn.commit()
+                table_values.append(values)
+            query = (sql.SQL("INSERT INTO {} ({}) VALUES ({})")
+                    .format(sql.Identifier(table_name),
+                     sql.SQL(', ').join(map(sql.Identifier, cols)),
+                     sql.SQL(', ').join(sql.Placeholder() * len(cols))))
+            if flatten:
+                table_values = flatten_list(table_values)
+            print(query.as_string(self.conn))
+            print(table_name)
+            print(table_values)
+            self.cur.executemany(query, table_values)
+            self.conn.commit()
         self.conn.close()
+
+def flatten_list(list_of_lists):
+    flattened = list()
+    for l in list_of_lists:
+        for t in l:
+            flattened.append(t)
+    return flattened
 
 
 

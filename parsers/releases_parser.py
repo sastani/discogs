@@ -1,5 +1,4 @@
 from lxml import etree
-from collections import deque
 from models.release import Release
 from parsers.utils import *
 from database.loaders.export import Exporter
@@ -20,21 +19,19 @@ def parse_xml(file_name, chunk_size):
     #advance iterator to root element
     event, root = next(context)
 
-    all_releases = deque()
-    counter = 0
+    all_releases = list()
     E = Exporter()
 
     for event, element in context:
         release_tag = element.tag
-        if counter == chunk_size:
+        if len(all_releases) == chunk_size:
             E.loader(all_releases, "release")
-            counter = 0
         if event == "start" and release_tag == "release":
             release_element = element
             release_id = element.get('id')
             release_status = element.get('status')
             release = Release(release_id, release_status)
-            print("release: " + str(counter))
+            #print("release: " + str(counter))
             #pop_last(all_releases)
             for child in release_element.iterchildren():
                 text = child.text
@@ -103,7 +100,6 @@ def parse_xml(file_name, chunk_size):
         # if we have found "end" of release, add release object to queue
         if event == "end" and release_tag == "release":
             all_releases.append(release)
-            counter += 1
             root.clear()
         #empty any remaining objects in queue
     if all_releases:
