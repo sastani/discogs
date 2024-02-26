@@ -66,7 +66,20 @@ class Release:
 
     def get_release_labels(self, test=False):
         fields = ["release_id", "label_id", "label_name", "catalog_num"]
-        values = [(self.id, label.get("id"), label.get("name"), label.get("catno")) for label in self.get_labels()]
+        labels_dict = dict()
+        for label in self.get_labels():
+            label_id = label.get("id")
+            if label_id in labels_dict:
+                label_dict = labels_dict[label_id]
+                cat_nums = label_dict["catno"]
+                cat_nums.append(label.get("catno"))
+            else:
+                label_dict = dict()
+                label_dict["id"] = label.get("id")
+                label_dict["name"] = label.get("name")
+                label_dict["catno"] = [label.get("catno")]
+                labels_dict[label_id] = label_dict
+        values = [(self.id, label.get("id"), label.get("name"), label.get("catno")) for label in labels_dict.values()]
         return get_rows(fields, values, test)
 
     def get_release_formats(self, test=False):
