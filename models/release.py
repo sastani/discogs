@@ -1,5 +1,4 @@
 from models.utils import get_row, get_rows
-import datetime
 class Release:
     def __init__(self, id, status):
         self.id = id
@@ -116,18 +115,25 @@ class Release:
         self.title = title
 
     def set_release_date(self, date):
-        date_part = date.split('-')
-        num_parts = len(date_part)
         year = month = day = None
-        if num_parts == 1:
-            year = int(date_part[0])
-        if num_parts == 2:
-            year = int(date_part[0])
-            month = int(date_part[1])
-        elif num_parts == 3:
-            year = int(date_part[0])
-            month = int(date_part[1])
-            day = int(date_part[2])
+        invalid_date = False
+        nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        #validate release date string has valid characters
+        for c in date:
+            if c not in nums and c != '-':
+                invalid_date = True
+        if not invalid_date:
+            date_part = date.split('-')
+            num_parts = len(date_part)
+            if num_parts == 1:
+                year = int(date_part[0])
+            if num_parts == 2:
+                year = int(date_part[0])
+                month = int(date_part[1])
+            elif num_parts == 3:
+                year = int(date_part[0])
+                month = int(date_part[1])
+                day = int(date_part[2])
         self.release_year = year
         self.release_month = month
         self.release_day = day
