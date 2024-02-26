@@ -66,9 +66,11 @@ CREATE TABLE label_urls(
 CREATE TABLE releases
 (
     id INT PRIMARY KEY,
-    master_id INT,
     title VARCHAR NOT NULL,
-    release_date DATE,
+    country VARCHAR,
+    release_year INT,
+    release_month INT,
+    release_day INT,
     status VARCHAR,
     data_quality VARCHAR
 );
@@ -102,6 +104,7 @@ CREATE TABLE release_tracks
     release_id INT,
     track_title VARCHAR,
     track_number INT,
+    position VARCHAR,
     duration  TIME,
     PRIMARY KEY(release_id, track_title)
 );
@@ -124,10 +127,10 @@ CREATE TABLE release_formats
     PRIMARY KEY(release_id, format)
 );
 
-/*DDL for master release to release entities*/
-CREATE TABLE master_releases
+/*DDL for release to master release entities*/
+CREATE TABLE release_master
 (
     master_id INT PRIMARY KEY,
     release_id INT,
-    main_release BOOLEAN
+    is_main_release BOOLEAN
 );

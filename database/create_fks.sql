@@ -26,6 +26,6 @@ ALTER TABLE release_styles ADD CONSTRAINT release_styles_release_fk FOREIGN KEY 
 ALTER TABLE release_tracks ADD CONSTRAINT release_tracks_release_fk FOREIGN KEY (release_id) REFERENCES releases(id);
 ALTER TABLE release_labels ADD CONSTRAINT release_labels_release_fk FOREIGN KEY (release_id) REFERENCES releases(id);
 ALTER TABLE release_formats ADD CONSTRAINT release_formats_release_fk FOREIGN KEY (release_id) REFERENCES releases(id);
-ALTER TABLE master_releases ADD CONSTRAINT master_releases_release_fk FOREIGN KEY (release_id) REFERENCES releases(id);
+ALTER TABLE release_master ADD CONSTRAINT release_master_release_fk FOREIGN KEY (release_id) REFERENCES releases(id);
 
 

@@ -48,4 +48,4 @@ def add_attributes(d, element):
     attributes = element.attrib
     for a in attributes:
         val = attributes[a]
-        d[prefix + "_" + a] = val
+        d[a] = val

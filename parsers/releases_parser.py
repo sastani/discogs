@@ -2,6 +2,7 @@ from lxml import etree
 from collections import deque
 from models.release import Release
 from parsers.utils import *
+from database.loaders.export import Exporter
 
 def pop_last(all_releases):
     if len(all_releases) != 0:
@@ -21,11 +22,12 @@ def parse_xml(file_name, chunk_size):
 
     all_releases = deque()
     counter = 0
+    E = Exporter()
 
     for event, element in context:
         release_tag = element.tag
         if counter == chunk_size:
-            empty_queue(all_releases)
+            E.loader(all_releases, "release")
             counter = 0
         if event == "start" and release_tag == "release":
             release_element = element
@@ -43,6 +45,8 @@ def parse_xml(file_name, chunk_size):
                     for artist in child.iterchildren():
                         artist_row = dict()
                         add_children(artist_row, artist)
+                        if "duration" in artist_row:
+                            artist_row["duration"]
                         release.get_artists().append(artist_row)
                         # print(release.get_artists())
                 elif tag == "title":
@@ -89,9 +93,12 @@ def parse_xml(file_name, chunk_size):
                     if main_release:
                         release.set_is_main_release()
                 elif tag == "tracklist":
+                    track_counter = 1
                     for track in child.iterchildren():
                         track_row = dict()
                         add_children(track_row, track)
+                        track_row["track_number"] = track_counter
+                        track_counter += 1
                         release.get_tracks().append(track_row)
         # if we have found "end" of release, add release object to queue
         if event == "end" and release_tag == "release":
@@ -99,8 +106,8 @@ def parse_xml(file_name, chunk_size):
             counter += 1
             root.clear()
         #empty any remaining objects in queue
-        if not all_releases:
-            empty_queue(all_releases)
+    if all_releases:
+        E.loader(all_releases, "release")
 
        #context.skip_subtree()
 
