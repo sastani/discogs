@@ -3,16 +3,6 @@ from models.release import Release
 from parsers.utils import *
 from database.loaders.export import Exporter
 
-def pop_last(all_releases):
-    if len(all_releases) != 0:
-        r = all_releases.pop()
-        print("release:", r.get_release(), sep=' ')
-        print("artists: ", r.get_artists(), sep=' ')
-        print("labels: ", r.get_labels(), sep=' ')
-        print("tracklist: ", r.get_tracks(), sep=' ')
-        print("genres: ", r.get_genres(), sep=' ')
-        print("styles: ", r.get_styles(), sep=' ')
-        print("formats: ", r.get_formats(), sep=' ')
 def parse_xml(file_name, chunk_size):
     context = etree.iterparse(file_name, events=('start', 'end'))
     context = iter(context)
@@ -26,13 +16,12 @@ def parse_xml(file_name, chunk_size):
         release_tag = element.tag
         if len(all_releases) == chunk_size:
             E.loader(all_releases, "release")
+            all_releases = list()
         if event == "start" and release_tag == "release":
             release_element = element
             release_id = element.get('id')
             release_status = element.get('status')
             release = Release(release_id, release_status)
-            #print("release: " + str(counter))
-            #pop_last(all_releases)
             for child in release_element.iterchildren():
                 text = child.text
                 tag = child.tag
@@ -42,8 +31,6 @@ def parse_xml(file_name, chunk_size):
                     for artist in child.iterchildren():
                         artist_row = dict()
                         add_children(artist_row, artist)
-                        if "duration" in artist_row:
-                            artist_row["duration"]
                         release.get_artists().append(artist_row)
                         # print(release.get_artists())
                 elif tag == "title":
@@ -51,10 +38,8 @@ def parse_xml(file_name, chunk_size):
                     # print(release.get_title())
                 elif tag == "labels":
                     for label in child.iterchildren():
-                        label_row = dict()
-                        add_attributes(label_row, label)
+                        label_row = label.attrib
                         release.get_labels().append(label_row)
-                        # print(release.get_labels())
                 elif tag == "extraartists":
                     continue
                 elif tag == "formats":

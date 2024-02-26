@@ -42,10 +42,3 @@ def add_children_only(d, element):
     val = element.text
     if val is not None:
         d[key] = val
-
-def add_attributes(d, element):
-    prefix = element.tag
-    attributes = element.attrib
-    for a in attributes:
-        val = attributes[a]
-        d[a] = val
