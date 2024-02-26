@@ -34,7 +34,7 @@ release =\
         "release_genres": ["release_id", "genre"],
         "release_styles": ["release_id", "style"],
         "release_tracks": ["release_id", "track_title", "track_number", "position", "duration"],
-        "release_labels": ["release_id", "label_id", "label_name", "catalog_num"],
+        "release_labels": ["release_id", "label_id", "label_name", "catalog_nums"],
         "release_formats": ["release_id", "format", "quantity", "description_arr"],
         "release_master": ["release_id", "master_id", "is_main_release"],
     }
