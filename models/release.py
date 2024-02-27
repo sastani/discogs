@@ -1,5 +1,5 @@
-from models.utils import get_row, get_rows
-import datetime
+from models.utils import get_row, get_rows, cleanup_duration
+import re
 class Release:
     def __init__(self, id, status):
         self.id = id
@@ -54,13 +54,24 @@ class Release:
         for track in self.get_tracks():
             duration = track.get("duration")
             if duration:
-                duration_parts = duration.split(':')
-                if len(duration_parts) == 2:
-                    hours = 0
-                    minutes, seconds = map(int, duration_parts)
+                duration_as_list = cleanup_duration(duration)
+                if duration_as_list:
+                    num_places = len(duration_as_list)
+                    if num_places == 1:
+                        print(duration)
+                        hours, minutes = 0, 0
+                        seconds = map(int, duration_as_list)
+                        print(duration_as_list)
+                    if num_places == 2:
+                        hours = 0
+                        minutes, seconds = map(int, duration_as_list)
+                    else:
+                        hours, minutes, seconds = map(int, duration_as_list)
+                    track["duration"] = '{:02d}:{:02d}:{:02d}'.format(hours, minutes, seconds)
+                    #print("id: ", self.id, "track duration: ", track["duration"])
+                    #print(track["duration"])
                 else:
-                    hours, minutes, seconds = map(int, duration_parts)
-                track["duration"] = '{:02d}:{:02d}:{:02d}'.format(hours, minutes, seconds)
+                    bad_track = zip(fields, (self.id, track.get("title"), track.get("track_number"), duration))
             values.append((self.id, track.get("title"), track.get("track_number"), track.get("position"), track.get("duration")))
         return get_rows(fields, values, test)
 
@@ -89,7 +100,7 @@ class Release:
 
     def get_release_master(self, test=False):
         fields = ["release_id", "master_id", "is_main_release"]
-        values = (self.id, self.master, self.is_main_release)
+        values = (self.id, self.master_id, self.is_main_release)
         return get_row(fields, values, test)
 
 
@@ -116,18 +127,25 @@ class Release:
         self.title = title
 
     def set_release_date(self, date):
-        date_part = date.split('-')
-        num_parts = len(date_part)
         year = month = day = None
-        if num_parts == 1:
-            year = int(date_part[0])
-        if num_parts == 2:
-            year = int(date_part[0])
-            month = int(date_part[1])
-        elif num_parts == 3:
-            year = int(date_part[0])
-            month = int(date_part[1])
-            day = int(date_part[2])
+        invalid_date = False
+        nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        #validate release date string has valid characters
+        for c in date:
+            if c not in nums and c != '-':
+                invalid_date = True
+        if not invalid_date:
+            date_part = date.split('-')
+            num_parts = len(date_part)
+            if num_parts == 1:
+                year = int(date_part[0])
+            if num_parts == 2:
+                year = int(date_part[0])
+                month = int(date_part[1])
+            elif num_parts == 3:
+                year = int(date_part[0])
+                month = int(date_part[1])
+                day = int(date_part[2])
         self.release_year = year
         self.release_month = month
         self.release_day = day
@@ -146,4 +164,5 @@ class Release:
 
     def set_is_main_release(self):
         self.is_main_release = True
+
 
