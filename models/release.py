@@ -58,10 +58,8 @@ class Release:
                 if duration_as_list:
                     num_places = len(duration_as_list)
                     if num_places == 1:
-                        print(duration)
                         hours, minutes = 0, 0
                         seconds = map(int, duration_as_list)
-                        print(duration_as_list)
                     if num_places == 2:
                         hours = 0
                         minutes, seconds = map(int, duration_as_list)
@@ -160,7 +158,7 @@ class Release:
         self.quality = quality
 
     def set_master(self, master):
-        self.master = master
+        self.master_id = master
 
     def set_is_main_release(self):
         self.is_main_release = True
