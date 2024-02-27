@@ -81,8 +81,7 @@ CREATE TABLE release_artists
     artist_id   INT,
     artist_name VARCHAR,
     ordinal INT,
-    join_string VARCHAR,
-    PRIMARY KEY (release_id, artist_id)
+    join_string VARCHAR
 );
 
 CREATE TABLE release_genres
@@ -95,8 +94,7 @@ CREATE TABLE release_genres
 CREATE TABLE release_styles
 (
     release_id INT,
-    style VARCHAR,
-    PRIMARY KEY (release_id, style)
+    style VARCHAR
 );
 
 CREATE TABLE release_tracks
@@ -105,8 +103,7 @@ CREATE TABLE release_tracks
     track_title VARCHAR,
     track_number INT,
     position VARCHAR,
-    duration  TIME,
-    PRIMARY KEY(release_id, track_title)
+    duration  TIME
 );
 
 CREATE TABLE release_labels
@@ -114,8 +111,7 @@ CREATE TABLE release_labels
     release_id INT,
     label_id INT,
     label_name VARCHAR,
-    catalog_nums VARCHAR[],
-    PRIMARY KEY(release_id, label_id)
+    catalog_nums VARCHAR[]
 );
 
 CREATE TABLE release_formats
@@ -123,14 +119,14 @@ CREATE TABLE release_formats
     release_id INT references releases(id),
     format VARCHAR,
     quantity INT,
-    description_arr VARCHAR[],
-    PRIMARY KEY(release_id, format)
+    text VARCHAR,
+    description_arr VARCHAR[]
 );
 
 /*DDL for release to master release entities*/
 CREATE TABLE release_master
 (
-    master_id INT PRIMARY KEY,
-    release_id INT,
+    release_id INT PRIMARY KEY,
+    master_id INT,
     is_main_release BOOLEAN
 );
