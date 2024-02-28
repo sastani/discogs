@@ -71,6 +71,7 @@ CREATE TABLE releases
     release_year INT,
     release_month INT,
     release_day INT,
+    released_string VARCHAR,
     status VARCHAR,
     data_quality VARCHAR
 );
@@ -104,7 +105,7 @@ CREATE TABLE release_tracks
     track_number INT,
     position VARCHAR,
     duration  TIME,
-    orig_duration VARCHAR
+    duration_string VARCHAR
 );
 
 CREATE TABLE release_labels
@@ -119,7 +120,7 @@ CREATE TABLE release_formats
 (
     release_id INT references releases(id),
     format VARCHAR,
-    quantity INT,
+    quantity_string VARCHAR,
     text VARCHAR,
     description_arr VARCHAR[]
 );

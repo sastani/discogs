@@ -14,7 +14,6 @@ def parse_xml(file_name, chunk_size):
 
     all_releases = list()
     E = Exporter()
-    file = open('output.log', 'a')
     for event, release_element in context:
         release_id = release_element.get('id')
         release_status = release_element.get('status')
@@ -113,15 +112,3 @@ def parse_xml(file_name, chunk_size):
         #skip parsing any children/descendants of release
         #context.skip_subtree()
     #return all_releases
-
-def empty_queue(releases):
-    while releases:
-        print("-----------------")
-        r = releases.pop()
-        print("release:", r.get_release(), sep=' ')
-        print("artists: ", r.get_artists(), sep=' ')
-        print("labels: ", r.get_labels(), sep=' ')
-        print("tracklist: ", r.get_tracks(), sep=' ')
-        print("genres: ", r.get_genres(), sep=' ')
-        print("styles: ", r.get_styles(), sep=' ')
-        print("formats: ", r.get_formats(), sep=' ')

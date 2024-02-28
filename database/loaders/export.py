@@ -29,13 +29,13 @@ label = \
     }
 release =\
     {
-        "releases": ["id", "title", "country", "release_year", "release_month", "release_day", "status", "data_quality"],
+        "releases": ["id", "title", "country", "release_year", "release_month", "release_day", "released_string", "status", "data_quality"],
         "release_artists": ["release_id", "artist_id", "artist_name", "ordinal", "join_string"],
         "release_genres": ["release_id", "genre"],
         "release_styles": ["release_id", "style"],
-        "release_tracks": ["release_id", "track_title", "track_number", "position", "duration", "original_duration"],
+        "release_tracks": ["release_id", "track_title", "track_number", "position", "duration", "duration_string"],
         "release_labels": ["release_id", "label_id", "label_name", "catalog_nums"],
-        "release_formats": ["release_id", "format", "quantity", "text", "description_arr"],
+        "release_formats": ["release_id", "format", "quantity_string", "text", "description_arr"],
         "release_master": ["release_id", "master_id", "is_main_release"],
     }
 entity_map = {"artist": artist, "label": label, "release": release}
@@ -47,10 +47,13 @@ class Exporter:
 
     def loader(self, q, entity_type):
         entity = entity_map[entity_type]
+        log = open('output.log', 'a')
+
         for table_name in entity:
             table_values = list()
             cols = entity[table_name]
             flatten = False
+
             for curr in q:
                 #get values
                 if table_name in ["releases", "labels", "artists", "release_master"]:
@@ -65,8 +68,12 @@ class Exporter:
                 else:
                     flatten = True
                     method_name = "get_" + table_name
-                    instance_method = getattr(curr, method_name)
-                    values = instance_method()
+                    if method_name == "get_release_tracks":
+                        values = curr.get_release_tracks(log, False)
+                        log.close()
+                    else:
+                        instance_method = getattr(curr, method_name)
+                        values = instance_method()
                 table_values.append(values)
             query = (sql.SQL("INSERT INTO {} ({}) VALUES ({})")
                     .format(sql.Identifier(table_name),
@@ -74,14 +81,10 @@ class Exporter:
                      sql.SQL(', ').join(sql.Placeholder() * len(cols))))
             if flatten:
                 table_values = flatten_list(table_values)
-                '''
-            print(query.as_string(self.conn))
-            print(table_name)
-            print(table_values)
-            
             self.cur.executemany(query, table_values)
             self.conn.commit()
-            '''
+
+
 
     def close_connection(self):
         self.conn.close()
