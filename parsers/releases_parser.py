@@ -3,47 +3,39 @@ from models.release import Release
 from parsers.utils import *
 from database.loaders.export import Exporter
 
-def pop_last(all_releases):
-    if len(all_releases) != 0:
-        r = all_releases.pop()
-        print("release:", r.get_release(), sep=' ')
-        print("artists: ", r.get_artists(), sep=' ')
-        print("labels: ", r.get_labels(), sep=' ')
-        print("tracklist: ", r.get_tracks(), sep=' ')
-        print("genres: ", r.get_genres(), sep=' ')
-        print("styles: ", r.get_styles(), sep=' ')
-        print("formats: ", r.get_formats(), sep=' ')
 def parse_xml(file_name, chunk_size):
-    context = etree.iterparse(file_name, events=('start', 'end'))
-    context = iter(context)
+    context = etree.iterparse(file_name, events=("end",), tag="release")
+    #context = iter(context)
     #advance iterator to root element
-    event, root = next(context)
+    #event, root = next(context)
+    #context = etree.iterwalk(root, events=('start', 'end'))
+    #event, root = next(context)
+
 
     all_releases = list()
     E = Exporter()
-
-    for event, element in context:
-        release_tag = element.tag
-        if len(all_releases) == chunk_size:
-            E.loader(all_releases, "release")
-        if event == "start" and release_tag == "release":
-            release_element = element
-            release_id = element.get('id')
-            release_status = element.get('status')
-            release = Release(release_id, release_status)
-            #print("release: " + str(counter))
-            #pop_last(all_releases)
+    file = open('output.log', 'a')
+    for event, release_element in context:
+        release_id = release_element.get('id')
+        release_status = release_element.get('status')
+        release = Release(release_id, release_status)
+        elem_as_string = etree.tostring(release_element)
+        #print("----------")
+        #print(elem_as_string)
+        if event == "end":
             for child in release_element.iterchildren():
-                text = child.text
+                elem_as_string_2 = etree.tostring(child)
                 tag = child.tag
+                text = child.text
+                #print(elem_as_string_2)
+                #file.write("this is release: " + release_id + "\n")
+                #file.write("this is the element: " + str(elem_as_string) + "\n")
                 if tag == "images":
                     continue
                 elif tag == "artists":
                     for artist in child.iterchildren():
                         artist_row = dict()
                         add_children(artist_row, artist)
-                        if "duration" in artist_row:
-                            artist_row["duration"]
                         release.get_artists().append(artist_row)
                         # print(release.get_artists())
                 elif tag == "title":
@@ -51,10 +43,8 @@ def parse_xml(file_name, chunk_size):
                     # print(release.get_title())
                 elif tag == "labels":
                     for label in child.iterchildren():
-                        label_row = dict()
-                        add_attributes(label_row, label)
+                        label_row = label.attrib
                         release.get_labels().append(label_row)
-                        # print(release.get_labels())
                 elif tag == "extraartists":
                     continue
                 elif tag == "formats":
@@ -79,7 +69,8 @@ def parse_xml(file_name, chunk_size):
                 elif tag == "country":
                     release.set_country(text)
                 elif tag == "released":
-                    release.set_release_date(text)
+                    if text:
+                        release.set_release_date(text)
                 elif tag == "notes":
                     release.set_notes(text)
                 elif tag == "data_quality":
@@ -97,13 +88,23 @@ def parse_xml(file_name, chunk_size):
                         track_row["track_number"] = track_counter
                         track_counter += 1
                         release.get_tracks().append(track_row)
-        # if we have found "end" of release, add release object to queue
-        if event == "end" and release_tag == "release":
-            all_releases.append(release)
-            root.clear()
-        #empty any remaining objects in queue
+        all_releases.append(release)
+        release_element.clear()
+        if len(all_releases) == chunk_size:
+            E.loader(all_releases, "release")
+            all_releases = list()
+
     if all_releases:
         E.loader(all_releases, "release")
+
+    E.close_connection()
+
+        #context.skip_subtree()
+        #next(context)
+        #root.clear()
+        # if we have found "end" of release, add release object to queue
+    #if all_releases:
+        #E.loader(all_releases, "release")
 
        #context.skip_subtree()
 

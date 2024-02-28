@@ -79,6 +79,7 @@ class Exporter:
                     print(query.as_string(self.conn))
                     self.cur.executemany(query, values)
                     self.conn.commit()
+    def close_connection(self):
         self.conn.close()
 
 
