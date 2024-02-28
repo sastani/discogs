@@ -33,7 +33,7 @@ release =\
         "release_artists": ["release_id", "artist_id", "artist_name", "ordinal", "join_string"],
         "release_genres": ["release_id", "genre"],
         "release_styles": ["release_id", "style"],
-        "release_tracks": ["release_id", "track_title", "track_number", "position", "duration"],
+        "release_tracks": ["release_id", "track_title", "track_number", "position", "duration", "original_duration"],
         "release_labels": ["release_id", "label_id", "label_name", "catalog_nums"],
         "release_formats": ["release_id", "format", "quantity", "text", "description_arr"],
         "release_master": ["release_id", "master_id", "is_main_release"],
@@ -74,11 +74,15 @@ class Exporter:
                      sql.SQL(', ').join(sql.Placeholder() * len(cols))))
             if flatten:
                 table_values = flatten_list(table_values)
+                '''
             print(query.as_string(self.conn))
             print(table_name)
             print(table_values)
+            
             self.cur.executemany(query, table_values)
             self.conn.commit()
+            '''
+
     def close_connection(self):
         self.conn.close()
 

@@ -103,7 +103,8 @@ CREATE TABLE release_tracks
     track_title VARCHAR,
     track_number INT,
     position VARCHAR,
-    duration  TIME
+    duration  TIME,
+    orig_duration VARCHAR
 );
 
 CREATE TABLE release_labels
