@@ -35,7 +35,7 @@ release =\
         "release_styles": ["release_id", "style"],
         "release_tracks": ["release_id", "track_title", "track_number", "position", "duration"],
         "release_labels": ["release_id", "label_id", "label_name", "catalog_nums"],
-        "release_formats": ["release_id", "format", "quantity", "description_arr"],
+        "release_formats": ["release_id", "format", "quantity", "text", "description_arr"],
         "release_master": ["release_id", "master_id", "is_main_release"],
     }
 entity_map = {"artist": artist, "label": label, "release": release}
@@ -79,6 +79,7 @@ class Exporter:
             print(table_values)
             self.cur.executemany(query, table_values)
             self.conn.commit()
+    def close_connection(self):
         self.conn.close()
 
 def flatten_list(list_of_lists):

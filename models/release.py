@@ -63,6 +63,8 @@ class Release:
                     if num_places == 2:
                         hours = 0
                         minutes, seconds = map(int, duration_as_list)
+                        minutes = minutes % 60
+                        hours = minutes // 60
                     else:
                         hours, minutes, seconds = map(int, duration_as_list)
                     track["duration"] = '{:02d}:{:02d}:{:02d}'.format(hours, minutes, seconds)
@@ -92,8 +94,8 @@ class Release:
         return get_rows(fields, values, test)
 
     def get_release_formats(self, test=False):
-        fields = ["release_id", "format", "quantity", "description_arr"]
-        values = [(self.id, format.get("format"), format.get("quantity"), format.get("description")) for format in self.get_formats()]
+        fields = ["release_id", "format", "quantity", "free_text", "description_arr"]
+        values = [(self.id, format.get("format"), format.get("quantity"), format.get("free_text"), format.get("description")) for format in self.get_formats()]
         return get_rows(fields, values, test)
 
     def get_release_master(self, test=False):
