@@ -4,7 +4,7 @@ from parsers.utils import *
 from database.loaders.export import Exporter
 
 def parse_xml(file_name, chunk_size):
-    context = etree.iterparse(file_name, events=("start",), tag="release")
+    context = etree.iterparse(file_name, events=("end",), tag="release")
     #context = iter(context)
     #advance iterator to root element
     #event, root = next(context)
@@ -22,7 +22,7 @@ def parse_xml(file_name, chunk_size):
         elem_as_string = etree.tostring(release_element)
         #print("----------")
         #print(elem_as_string)
-        if event == "start":
+        if event == "end":
             for child in release_element.iterchildren():
                 elem_as_string_2 = etree.tostring(child)
                 tag = child.tag
@@ -89,12 +89,15 @@ def parse_xml(file_name, chunk_size):
                         track_counter += 1
                         release.get_tracks().append(track_row)
         all_releases.append(release)
+        release_element.clear()
         if len(all_releases) == chunk_size:
             E.loader(all_releases, "release")
             all_releases = list()
 
     if all_releases:
         E.loader(all_releases, "release")
+
+    E.close_connection()
 
         #context.skip_subtree()
         #next(context)
