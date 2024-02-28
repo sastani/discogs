@@ -53,6 +53,7 @@ def parse_xml(file_name, chunk_size):
                         format_description = list()
                         format_row['format'] = format.get('name')
                         format_row['quantity'] = format.get('qty')
+                        format_row['free_text'] = format.get('text')
                         for descriptions in format:
                             for description in descriptions:
                                 format_description.append(description.text)
