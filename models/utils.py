@@ -24,28 +24,20 @@ def convert_duration(duration_as_list):
     num_places = len(duration_as_list)
     if num_places == 1:
         seconds = int(duration_as_list[0])
-        temp = seconds
-        seconds = seconds % 60
-        minutes = temp // 60
+        minutes = 0
         hours = 0
     elif num_places == 2:
         minutes, seconds = map(int, duration_as_list)
-        temp_sec = seconds
-        seconds = seconds % 60
-        temp_min = minutes
-        minutes = (minutes % 60) + (temp_sec//60)
-        hours = temp_min // 60
+        hours = 0
     elif num_places == 3:
         hours, minutes, seconds = map(int, duration_as_list)
-        temp_sec = seconds
-        seconds = seconds % 60
-        #temp_min = minutes
-        minutes = (minutes % 60) + (temp_sec//60)
-        hours = hours + minutes//60
-    #forget about any tracks that won't fit in (hh:mm:ss), i.e. a day long
     else:
         return None, None, None
-
+    mins_to_add = seconds // 60
+    seconds = seconds % 60
+    hours_to_add = minutes // 60
+    minutes = (minutes % 60) + mins_to_add
+    hours = hours + hours_to_add
     return hours, minutes, seconds
 
 def get_row(fields, values, test):

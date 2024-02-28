@@ -59,9 +59,6 @@ class Release:
                     hours, minutes, seconds = convert_duration(duration_as_list)
                     if hours is not None and minutes is not None and seconds is not None:
                         track["duration"] = '{:02d}:{:02d}:{:02d}'.format(hours, minutes, seconds)
-                        if len(duration_as_list) == 2:
-                            print("id: ", self.id, "track duration: ", track["duration"])
-                            print(duration)
                     #print(track["duration"])
                 else:
                     bad_track = zip(fields, (self.id, track.get("title"), track.get("track_number"), None, duration))
