@@ -20,7 +20,6 @@ def parse_xml(file_name, chunk_size):
                 elem_as_string_2 = etree.tostring(child)
                 tag = child.tag
                 text = child.text
-                '''
                 #print(elem_as_string_2)
                 #file.write("this is release: " + release_id + "\n")
                 #file.write("this is the element: " + str(elem_as_string) + "\n")
@@ -85,7 +84,7 @@ def parse_xml(file_name, chunk_size):
                         track_row["track_number"] = track_counter
                         track_counter += 1
                         release.get_tracks().append(track_row)
-                        '''
+
         all_releases.append(release)
         release_element.clear()
 
@@ -93,21 +92,8 @@ def parse_xml(file_name, chunk_size):
             E.load_all(all_releases, "release")
             all_releases = list()
 
+
     if all_releases:
         E.load_all(all_releases, "release")
 
     E.close_connection()
-
-        #context.skip_subtree()
-        #next(context)
-        #root.clear()
-        # if we have found "end" of release, add release object to queue
-    #if all_releases:
-        #E.loader(all_releases, "release")
-
-       #context.skip_subtree()
-
-        #element.clear()
-        #skip parsing any children/descendants of release
-        #context.skip_subtree()
-    #return all_releases
