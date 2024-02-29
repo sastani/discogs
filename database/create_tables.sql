@@ -48,14 +48,14 @@ CREATE TABLE label(
 
 
 CREATE TABLE label_sub_labels(
-    label_id INT references labels(id),
-    sub_label_label_id INT references labels(id),
+    label_id INT references label(id),
+    sub_label_label_id INT references label(id),
     sub_label_label_name VARCHAR,
     PRIMARY KEY (label_id, sub_label_label_id)
 );
 
 CREATE TABLE label_urls(
-    label_id INT references labels(id),
+    label_id INT references label(id),
     url VARCHAR,
     page_type VARCHAR,
     PRIMARY KEY(label_id, url)
@@ -118,7 +118,7 @@ CREATE TABLE release_labels
 
 CREATE TABLE release_formats
 (
-    release_id INT references releases(id),
+    release_id INT references release(id),
     format VARCHAR,
     quantity_string VARCHAR,
     text VARCHAR,
