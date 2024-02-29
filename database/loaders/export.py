@@ -48,7 +48,6 @@ class Exporter:
     def loader(self, q, entity_type):
         entity = entity_map[entity_type]
         log = open('output.log', 'a')
-
         for table_name in entity:
             table_values = list()
             cols = entity[table_name]
@@ -83,8 +82,6 @@ class Exporter:
                 table_values = flatten_list(table_values)
             self.cur.executemany(query, table_values)
             self.conn.commit()
-
-
 
     def close_connection(self):
         self.conn.close()

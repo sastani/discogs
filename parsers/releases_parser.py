@@ -5,12 +5,6 @@ from database.loaders.export import Exporter
 
 def parse_xml(file_name, chunk_size):
     context = etree.iterparse(file_name, events=("end",), tag="release")
-    #context = iter(context)
-    #advance iterator to root element
-    #event, root = next(context)
-    #context = etree.iterwalk(root, events=('start', 'end'))
-    #event, root = next(context)
-
 
     all_releases = list()
     E = Exporter()
@@ -26,6 +20,7 @@ def parse_xml(file_name, chunk_size):
                 elem_as_string_2 = etree.tostring(child)
                 tag = child.tag
                 text = child.text
+                '''
                 #print(elem_as_string_2)
                 #file.write("this is release: " + release_id + "\n")
                 #file.write("this is the element: " + str(elem_as_string) + "\n")
@@ -75,11 +70,15 @@ def parse_xml(file_name, chunk_size):
                     release.set_notes(text)
                 elif tag == "data_quality":
                     release.set_quality(text)
-                elif tag =="master_id":
+                    '''
+                if tag =="master_id":
                     release.set_master(text)
-                    main_release = child.get('is_main_release')
-                    if main_release:
-                        release.set_is_main_release()
+                    is_main_release = child.get('is_main_release')
+                    if is_main_release == "true":
+                        release.set_is_main_release(True)
+                    elif is_main_release == "false":
+                        release.set_is_main_release(False)
+                        '''
                 elif tag == "tracklist":
                     track_counter = 1
                     for track in child.iterchildren():
@@ -88,14 +87,24 @@ def parse_xml(file_name, chunk_size):
                         track_row["track_number"] = track_counter
                         track_counter += 1
                         release.get_tracks().append(track_row)
+                        '''
         all_releases.append(release)
         release_element.clear()
+        '''
         if len(all_releases) == chunk_size:
             E.loader(all_releases, "release")
             all_releases = list()
+        
 
     if all_releases:
         E.loader(all_releases, "release")
+        '''
+        if len(all_releases) == chunk_size:
+            E.load_one_table(all_releases, "release", "release_master")
+            all_releases = list()
+
+    if all_releases:
+        E.load_one_table(all_releases, "release", "release_master")
 
     E.close_connection()
 

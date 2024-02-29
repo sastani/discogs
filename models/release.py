@@ -4,7 +4,7 @@ class Release:
     def __init__(self, id, status):
         self.id = id
         self.status = status
-        self.is_main_release = False
+        self.is_main_release = None
         self.title = None
         self.release_year = None
         self.release_month = None
@@ -160,7 +160,7 @@ class Release:
     def set_master(self, master):
         self.master_id = master
 
-    def set_is_main_release(self):
-        self.is_main_release = True
+    def set_is_main_release(self, bool_val):
+        self.is_main_release = bool_val
 
 
