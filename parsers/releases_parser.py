@@ -70,7 +70,6 @@ def parse_xml(file_name, chunk_size):
                     release.set_notes(text)
                 elif tag == "data_quality":
                     release.set_quality(text)
-                    '''
                 if tag =="master_id":
                     release.set_master(text)
                     is_main_release = child.get('is_main_release')
@@ -78,7 +77,6 @@ def parse_xml(file_name, chunk_size):
                         release.set_is_main_release(True)
                     elif is_main_release == "false":
                         release.set_is_main_release(False)
-                        '''
                 elif tag == "tracklist":
                     track_counter = 1
                     for track in child.iterchildren():
@@ -90,21 +88,13 @@ def parse_xml(file_name, chunk_size):
                         '''
         all_releases.append(release)
         release_element.clear()
-        '''
-        if len(all_releases) == chunk_size:
-            E.loader(all_releases, "release")
-            all_releases = list()
-        
 
-    if all_releases:
-        E.loader(all_releases, "release")
-        '''
         if len(all_releases) == chunk_size:
-            E.load_one_table(all_releases, "release", "release_master")
+            E.load_all(all_releases, "release")
             all_releases = list()
 
     if all_releases:
-        E.load_one_table(all_releases, "release", "release_master")
+        E.load_all(all_releases, "release")
 
     E.close_connection()
 

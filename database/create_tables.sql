@@ -1,5 +1,5 @@
 /* DDL FOR artist entities*/
-CREATE TABLE artists(
+CREATE TABLE artist(
     id INT PRIMARY KEY,
     artist_name VARCHAR,
     name VARCHAR,
@@ -36,7 +36,7 @@ CREATE TABLE artist_urls(
 
 
 /* DDL FOR label entities*/
-CREATE TABLE labels(
+CREATE TABLE label(
     id INT PRIMARY KEY,
     name VARCHAR,
     parent_label_id INT,
@@ -63,7 +63,7 @@ CREATE TABLE label_urls(
 
 
 /* DDL FOR release entities*/
-CREATE TABLE releases
+CREATE TABLE release
 (
     id INT PRIMARY KEY,
     title VARCHAR NOT NULL,
