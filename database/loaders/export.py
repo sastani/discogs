@@ -55,7 +55,7 @@ class Exporter:
         table_values = list()
         cols = entity[table_name]
         flatten = False
-        if table_name not in ["releases", "labels", "artists", "release_master"]:
+        if table_name not in ["release", "label", "artist", "release_master"]:
             flatten = True
         query, table_values = self.create_query(q, table_name, cols, table_values)
         self.execute_query(query, table_values, flatten)
