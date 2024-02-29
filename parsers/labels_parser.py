@@ -57,8 +57,8 @@ def parse_xml(file_name):
                 elif child == "sublabels":
                     label_sub_labels = label.get_sub_labels()
                     for sub_label in child_element:
-                        sub_label_row = dict()
-                        add_attributes(sub_label_row, sub_label)
+                        sub_label_row = child_element.attrib
+                        #add_attributes(sub_label_row, sub_label)
                         sub_label_name = sub_label.text
                         sub_label_row['name'] = sub_label_name
                         label_sub_labels.append(sub_label_row)

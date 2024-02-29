@@ -1,5 +1,5 @@
 /* DDL FOR artist entities*/
-CREATE TABLE artists(
+CREATE TABLE artist(
     id INT PRIMARY KEY,
     artist_name VARCHAR,
     name VARCHAR,
@@ -36,7 +36,7 @@ CREATE TABLE artist_urls(
 
 
 /* DDL FOR label entities*/
-CREATE TABLE labels(
+CREATE TABLE label(
     id INT PRIMARY KEY,
     name VARCHAR,
     parent_label_id INT,
@@ -48,14 +48,14 @@ CREATE TABLE labels(
 
 
 CREATE TABLE label_sub_labels(
-    label_id INT references labels(id),
-    sub_label_label_id INT references labels(id),
+    label_id INT references label(id),
+    sub_label_label_id INT references label(id),
     sub_label_label_name VARCHAR,
     PRIMARY KEY (label_id, sub_label_label_id)
 );
 
 CREATE TABLE label_urls(
-    label_id INT references labels(id),
+    label_id INT references label(id),
     url VARCHAR,
     page_type VARCHAR,
     PRIMARY KEY(label_id, url)
@@ -63,7 +63,7 @@ CREATE TABLE label_urls(
 
 
 /* DDL FOR release entities*/
-CREATE TABLE releases
+CREATE TABLE release
 (
     id INT PRIMARY KEY,
     title VARCHAR NOT NULL,
@@ -71,6 +71,7 @@ CREATE TABLE releases
     release_year INT,
     release_month INT,
     release_day INT,
+    released_string VARCHAR,
     status VARCHAR,
     data_quality VARCHAR
 );
@@ -81,8 +82,7 @@ CREATE TABLE release_artists
     artist_id   INT,
     artist_name VARCHAR,
     ordinal INT,
-    join_string VARCHAR,
-    PRIMARY KEY (release_id, artist_id)
+    join_string VARCHAR
 );
 
 CREATE TABLE release_genres
@@ -95,8 +95,7 @@ CREATE TABLE release_genres
 CREATE TABLE release_styles
 (
     release_id INT,
-    style VARCHAR,
-    PRIMARY KEY (release_id, style)
+    style VARCHAR
 );
 
 CREATE TABLE release_tracks
@@ -106,7 +105,7 @@ CREATE TABLE release_tracks
     track_number INT,
     position VARCHAR,
     duration  TIME,
-    PRIMARY KEY(release_id, track_title)
+    duration_string VARCHAR
 );
 
 CREATE TABLE release_labels
@@ -114,23 +113,22 @@ CREATE TABLE release_labels
     release_id INT,
     label_id INT,
     label_name VARCHAR,
-    catalog_nums VARCHAR[],
-    PRIMARY KEY(release_id, label_id)
+    catalog_nums VARCHAR[]
 );
 
 CREATE TABLE release_formats
 (
-    release_id INT references releases(id),
+    release_id INT references release(id),
     format VARCHAR,
-    quantity INT,
-    description_arr VARCHAR[],
-    PRIMARY KEY(release_id, format)
+    quantity_string VARCHAR,
+    text VARCHAR,
+    description_arr VARCHAR[]
 );
 
 /*DDL for release to master release entities*/
 CREATE TABLE release_master
 (
-    master_id INT PRIMARY KEY,
-    release_id INT,
+    release_id INT PRIMARY KEY,
+    master_id INT,
     is_main_release BOOLEAN
 );

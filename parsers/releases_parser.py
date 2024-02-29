@@ -5,16 +5,9 @@ from database.loaders.export import Exporter
 
 def parse_xml(file_name, chunk_size):
     context = etree.iterparse(file_name, events=("end",), tag="release")
-    #context = iter(context)
-    #advance iterator to root element
-    #event, root = next(context)
-    #context = etree.iterwalk(root, events=('start', 'end'))
-    #event, root = next(context)
-
 
     all_releases = list()
     E = Exporter()
-    file = open('output.log', 'a')
     for event, release_element in context:
         release_id = release_element.get('id')
         release_status = release_element.get('status')
@@ -53,6 +46,7 @@ def parse_xml(file_name, chunk_size):
                         format_description = list()
                         format_row['format'] = format.get('name')
                         format_row['quantity'] = format.get('qty')
+                        format_row['free_text'] = format.get('text')
                         for descriptions in format:
                             for description in descriptions:
                                 format_description.append(description.text)
@@ -75,11 +69,13 @@ def parse_xml(file_name, chunk_size):
                     release.set_notes(text)
                 elif tag == "data_quality":
                     release.set_quality(text)
-                elif tag =="master_id":
+                if tag =="master_id":
                     release.set_master(text)
-                    main_release = child.get('is_main_release')
-                    if main_release:
-                        release.set_is_main_release()
+                    is_main_release = child.get('is_main_release')
+                    if is_main_release == "true":
+                        release.set_is_main_release(True)
+                    elif is_main_release == "false":
+                        release.set_is_main_release(False)
                 elif tag == "tracklist":
                     track_counter = 1
                     for track in child.iterchildren():
@@ -88,39 +84,16 @@ def parse_xml(file_name, chunk_size):
                         track_row["track_number"] = track_counter
                         track_counter += 1
                         release.get_tracks().append(track_row)
+
         all_releases.append(release)
         release_element.clear()
+
         if len(all_releases) == chunk_size:
-            E.loader(all_releases, "release")
+            E.load_all(all_releases, "release")
             all_releases = list()
 
+
     if all_releases:
-        E.loader(all_releases, "release")
+        E.load_all(all_releases, "release")
 
     E.close_connection()
-
-        #context.skip_subtree()
-        #next(context)
-        #root.clear()
-        # if we have found "end" of release, add release object to queue
-    #if all_releases:
-        #E.loader(all_releases, "release")
-
-       #context.skip_subtree()
-
-        #element.clear()
-        #skip parsing any children/descendants of release
-        #context.skip_subtree()
-    #return all_releases
-
-def empty_queue(releases):
-    while releases:
-        print("-----------------")
-        r = releases.pop()
-        print("release:", r.get_release(), sep=' ')
-        print("artists: ", r.get_artists(), sep=' ')
-        print("labels: ", r.get_labels(), sep=' ')
-        print("tracklist: ", r.get_tracks(), sep=' ')
-        print("genres: ", r.get_genres(), sep=' ')
-        print("styles: ", r.get_styles(), sep=' ')
-        print("formats: ", r.get_formats(), sep=' ')
