@@ -25,7 +25,7 @@ def parse_xml(file_name):
                     label.set_profile(text)
                 elif tag == "data_quality":
                     label.set_quality(text)
-                elif tag == "parentlabel":
+                elif tag == "parentLabel":
                     parent_label_id = element.get('id')
                     label.set_parent_label(parent_label_id, text)
                 elif tag == "urls":
@@ -44,7 +44,8 @@ def parse_xml(file_name):
                             label_sub_labels.append(sub_label_row)
                     label.set_sub_labels(label_sub_labels)
             all_labels.append(label)
-    return all_labels
+    if all_labels:
+        E.load_all(all_labels, "label")
 
 def find_id(element):
     i = element.find('id')
