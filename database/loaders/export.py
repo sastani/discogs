@@ -23,9 +23,9 @@ artist = \
     }
 label = \
     {
-        "label": ["id", "label_name", "parent_label_id", "parent_label_name", "contact_info", "profile",
+        "label": ["id", "name", "parent_label_id", "parent_label_name", "contact_info", "profile",
                    "data_quality"],
-        "label_sub_labels": ["label_id", "sublabel_label_id", "sublabel_label_name"],
+        "label_sublabels": ["label_id", "sublabel_label_id", "sublabel_label_name"],
         "label_urls": ["label_id", "url", "page_type"]
     }
 release =\
@@ -70,13 +70,14 @@ class Exporter:
             else:
                 instance_method = getattr(curr, method_name)
                 values = instance_method()
-            table_values.append(values)
+            if values:
+                table_values.append(values)
         query = (sql.SQL("INSERT INTO {} ({}) VALUES ({})")
                  .format(sql.Identifier(table_name),
                          sql.SQL(', ').join(map(sql.Identifier, cols)),
                          sql.SQL(', ').join(sql.Placeholder() * len(cols))))
-        print(query)
-        print(table_values)
+        #print(query)
+        #print(table_values)
         return query, table_values
 
     def execute_query(self, query, table_values, flatten):
