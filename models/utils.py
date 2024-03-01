@@ -54,9 +54,9 @@ def extract_webpage(url):
         domain = url_parts[2]
     else:
         domain = url
-    print(domain)
+    if domain == 'linktr.ee':
+        return domain
     domain_parts = domain.split('.')
-    print(domain_parts)
     if len(domain_parts)  == 2:
         page_type = domain_parts[0]
     else:
@@ -64,27 +64,38 @@ def extract_webpage(url):
     return page_type
 
 def cleanup_name(name):
-    punc = [':', ';', ',', '!', '"', '\'']
+    punc = [' ', ':', ';', ',', '!', '"', '\'']
     new_name = [c.lower() for c in name if c not in punc]
     return ''.join(new_name)
 
 def convert_name_to_list(name):
+    print(name)
     name_list = name.split(' ')
-    name_list = [cleanup_name(n) for n in name_list]
+    name_list = [cleanup_name(n) for n in name_list if len(n) > 1]
     return name_list
 
 def get_webpage_type(name, url_path):
     is_valid = validate_url(url_path)
+    page_type = "other"
     if is_valid:
-        webpage_type = extract_webpage(url_path)
-        name_list = convert_name_to_list(name)
-        for n in name_list:
-            if n in webpage_type:
-                webpage_type = "website"
-                return webpage_type
+        domain = extract_webpage(url_path)
+        social_pages = ['facebook', 'instagram', 'twitter', 'tiktok', 'spotify', 'soundcloud','bandcamp',
+                        'youtube', 'myspace', 'wikipedia', 'tumblr', 'vimeo', 'youtube', 'flickr', 'linktr.ee']
+        if domain in social_pages:
+            page_type = domain
+        else:
+            name_list = convert_name_to_list(name)
+            name = name.replace(' ', '')
+            if name in domain:
+                page_type = "website"
+            else:
+                #check components of name (i.e. 'Siesta Music', find 'siesta' in 'siestarecordings.com'
+                for n in name_list:
+                    if n in domain:
+                        page_type = "website"
+        return page_type
     else:
         return None
-    return webpage_type
 
 def validate_url(url):
     patterns = ['.+\.{1}.+', '.+\.{1}.+\.{1}.+']
