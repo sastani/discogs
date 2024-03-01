@@ -66,7 +66,8 @@ class Exporter:
             #get values
             if method_name == "get_release_tracks":
                 values = curr.get_release_tracks(log, False)
-                log.close()
+            elif method_name == "get_label_urls":
+                values = curr.get_label_urls(log, False)
             else:
                 instance_method = getattr(curr, method_name)
                 values = instance_method()
@@ -88,6 +89,8 @@ class Exporter:
 
     def close_connection(self):
         self.conn.close()
+        log.close()
+
 
 def flatten_list(list_of_lists):
     flattened = list()

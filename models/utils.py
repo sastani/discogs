@@ -48,19 +48,36 @@ def convert_duration(id, log, duration, duration_as_list):
         return None, None, None
     return hours, minutes, seconds
 
-def extract_webpage(url):
+def extract_webpage(id, log, url):
     if '/' in url:
         url_parts = url.split('/')
-        domain = url_parts[2]
+        pattern = '.+//.+'
+        pattern_two = '.+/.+/.+'
+        '.+/.+/.+'
+        num_parts = len(url_parts)
+        if re.match(pattern, url):
+            if num_parts > 2:
+                domain = url_parts[2]
+            else:
+                domain = url_parts[0]
+        else:
+            domain = url_parts[0]
     else:
         domain = url
     if domain == 'linktr.ee':
         return domain
     domain_parts = domain.split('.')
-    if len(domain_parts)  == 2:
-        page_type = domain_parts[0]
-    else:
-        page_type = domain_parts[1]
+    try:
+        if len(domain_parts)  == 2:
+            page_type = domain_parts[0]
+        else:
+            page_type = domain_parts[1]
+    except Exception as err:
+            print(f"Unexpected {err=}, {type(err)=}")
+            error_message = "extract_webpage() FAILED for label id: " + id + " with url: " + url + "\n"
+            print(error_message)
+            log.write(error_message)
+            return None
     return page_type
 
 def cleanup_name(name):
@@ -69,18 +86,19 @@ def cleanup_name(name):
     return ''.join(new_name)
 
 def convert_name_to_list(name):
-    print(name)
     name_list = name.split(' ')
     name_list = [cleanup_name(n) for n in name_list if len(n) > 1]
     return name_list
 
-def get_webpage_type(name, url_path):
+def get_webpage_type(id, log, name, url_path):
     is_valid = validate_url(url_path)
+    domain = extract_webpage(id, log, url_path)
     page_type = "other"
-    if is_valid:
-        domain = extract_webpage(url_path)
-        social_pages = ['facebook', 'instagram', 'twitter', 'tiktok', 'spotify', 'soundcloud','bandcamp',
-                        'youtube', 'myspace', 'wikipedia', 'tumblr', 'vimeo', 'youtube', 'flickr', 'linktr.ee']
+    if is_valid and domain is not None:
+        social_pages = ['facebook', 'instagram', 'twitter', 'pinterest', 'tiktok', 'spotify', 'beatport', 'soundcloud',
+                        'bandcamp','google', 'youtube', 'myspace', 'wikipedia', 'reddit', 'tumblr', 'vimeo',
+                         'youtube', 'flickr', 'linktr.ee', 'discogs', 'last', 'reverbnation', 'mixcloud', 'imdb',
+                        'ra', 'residentadvisor']
         if domain in social_pages:
             page_type = domain
         else:
@@ -97,12 +115,28 @@ def get_webpage_type(name, url_path):
     else:
         return None
 
+
 def validate_url(url):
-    patterns = ['.+\.{1}.+', '.+\.{1}.+\.{1}.+']
-    for p in patterns:
-        if re.match(p, url):
+    pattern = re.compile(
+        r"(\w+://)?"  # protocol                      (optional)
+        r"(\w+\.)?"  # host                          (optional)
+        r"(([\w-]+)\.(\w+))"  # domain
+        r"(\.\w+)*"  # top-level domain              (optional, can have > 1)
+        r"([\w\-\._\~/]*)*(?<!\.)"  # path, params, anchors, etc.   (optional)
+    )
+    inner_pattern_subdomain = '(.+/)?\w{2,3}\.\w+\.\w{2,3}(/.+)?'
+    inner_pattern_no_subdomain = '(.+/)?\w+.\w{2,3}(/.+)?'
+    match = pattern.match(url)
+    if match:
+        sub_match = re.match(inner_pattern_subdomain, url)
+        no_sub_match =  re.match(inner_pattern_no_subdomain, url)
+        if sub_match or no_sub_match:
             return True
-    return False
+        else:
+            return False
+    else:
+        return False
+
 
 def get_row(fields, values, test):
     if test:
