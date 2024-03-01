@@ -7,5 +7,5 @@ ALTER TABLE release_labels ADD CONSTRAINT release_labels_pk PRIMARY KEY(release_
 ALTER TABLE release_styles ADD CONSTRAINT release_styles_pk PRIMARY KEY (release_id, style);
 ALTER TABLE release_formats ADD CONSTRAINT release_formats_pk PRIMARY KEY (release_id, format, text, description_arr);
 
-
+--ALTER TABLE label_sublabels ADD CONSTRAINT label_sublabels_pk PRIMARY KEY()
 

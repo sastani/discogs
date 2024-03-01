@@ -48,10 +48,10 @@ CREATE TABLE label(
 
 
 CREATE TABLE label_sublabels(
-    label_id INT references label(id),
-    sublabel_label_id INT references label(id),
+    label_id INT NOT NULL,
+    sublabel_label_id INT NOT NULL,
     sublabel_label_name VARCHAR,
-    PRIMARY KEY (label_id, sub_label_label_id)
+    PRIMARY KEY (label_id, sublabel_label_id)
 );
 
 CREATE TABLE label_urls(
