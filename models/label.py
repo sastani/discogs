@@ -30,17 +30,20 @@ class Label:
         values = [self.id, self.label_name, self.parent_label_id, self.parent_label, self.contact_info, self.profile, self.quality]
         return get_row(fields, values, test)
 
-    def get_label_urls(self, test=False):
+    def get_label_urls(self, log, test=False):
         fields = ["label_id", "url", "page_type"]
         label_url_strings = self.get_urls()
         label_urls = list()
+        seen_urls = set()
         for url in label_url_strings:
-            label_url_row = dict()
-            label_url_row['url'] = url
-            print(url)
-            webpage_type = get_webpage_type(self.label_name.lower(), url.lower())
-            label_url_row['type'] = webpage_type
-            label_urls.append(label_url_row)
+            #dont add duplicate urls
+            if url not in seen_urls:
+                label_url_row = dict()
+                label_url_row['url'] = url
+                webpage_type = get_webpage_type(self.id, log, self.label_name.lower(), url.lower())
+                label_url_row['type'] = webpage_type
+                label_urls.append(label_url_row)
+                seen_urls.add(url)
         #values = list()
         values = [(self.id, label.get("url"), label.get("type")) for label in label_urls if label]
         return get_rows(fields, values, test)
