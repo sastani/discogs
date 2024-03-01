@@ -4,7 +4,9 @@ def extract_webpage(url):
         domain = url_parts[2]
     else:
         domain = url
+    print(domain)
     domain_parts = domain.split('.')
+    print(domain_parts)
     if len(domain_parts)  == 2:
         page_type = domain_parts[0]
     else:

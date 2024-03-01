@@ -25,7 +25,7 @@ label = \
     {
         "label": ["id", "label_name", "parent_label_id", "parent_label_name", "contact_info", "profile",
                    "data_quality"],
-        "label_sub_labels": ["label_id", "sub_label_id", "sub_label_name"],
+        "label_sub_labels": ["label_id", "sublabel_label_id", "sublabel_label_name"],
         "label_urls": ["label_id", "url", "page_type"]
     }
 release =\
@@ -75,6 +75,8 @@ class Exporter:
                  .format(sql.Identifier(table_name),
                          sql.SQL(', ').join(map(sql.Identifier, cols)),
                          sql.SQL(', ').join(sql.Placeholder() * len(cols))))
+        print(query)
+        print(table_values)
         return query, table_values
 
     def execute_query(self, query, table_values, flatten):

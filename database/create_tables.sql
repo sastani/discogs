@@ -47,10 +47,10 @@ CREATE TABLE label(
 );
 
 
-CREATE TABLE label_sub_labels(
+CREATE TABLE label_sublabels(
     label_id INT references label(id),
-    sub_label_label_id INT references label(id),
-    sub_label_label_name VARCHAR,
+    sublabel_label_id INT references label(id),
+    sublabel_label_name VARCHAR,
     PRIMARY KEY (label_id, sub_label_label_id)
 );
 
