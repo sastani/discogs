@@ -1,5 +1,4 @@
 from models.utils import get_row, get_rows, cleanup_duration, convert_duration
-import re
 class Release:
     def __init__(self, id, status):
         self.id = id
