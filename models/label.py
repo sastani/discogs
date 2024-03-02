@@ -45,7 +45,7 @@ class Label:
                 label_urls.append(label_url_row)
                 seen_urls.add(url)
         #values = list()
-        values = [(self.id, label.get("url"), label.get("type")) for label in label_urls if label]
+        values = [(self.id, label_url.get("url"), label_url.get("type")) for label_url in label_urls if label_url]
         return get_rows(fields, values, test)
 
     def get_label_sublabels(self, test=False):

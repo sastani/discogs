@@ -1,6 +1,7 @@
 from lxml import etree
 from models.label import Label
 from database.loaders.export import Exporter
+from utils import find_id, find_name
 def parse_xml(file_name):
     #context = etree.iterparse(file_name, events=('end',))
     #advance iterator to root element
@@ -11,10 +12,10 @@ def parse_xml(file_name):
     all_labels = list()
     context = etree.iterparse(file_name, tag="label")
     for event, element in context:
-        i = find_id(element)
-        n = find_name(element)
-        if i is not None and n is not None:
-            label = Label(i, n)
+        label_id = find_id(element)
+        name = find_name(element)
+        if label_id is not None and name is not None:
+            label = Label(label_id, name)
             walk_context = etree.iterwalk(element, events=('end',))
             for event_label, label_element in walk_context:
                 tag = label_element.tag
@@ -47,13 +48,3 @@ def parse_xml(file_name):
     if all_labels:
         E.load_all(all_labels, "label")
     E.close_connection()
-
-def find_id(element):
-    i = element.find('id')
-    if i is not None:
-        return i.text
-
-def find_name(element):
-    n = element.find('name')
-    if n is not None:
-        return n.text
