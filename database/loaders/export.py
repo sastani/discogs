@@ -18,8 +18,9 @@ artist = \
     {
         "artist": ["id", "artist_name", "name", "profile", "data_quality"],
         "artist_name_variations": ["artist_id", "name"],
-        "artist_aliases": ["artist_id", "alias_id", "alias_name"],
-        "artist_urls": ["artist_id", "url", "page_type"],
+        "artist_aliases": ["artist_id", "alias_artist_id", "alias_name"],
+        "artist_groups": ["artist_id", "group_artist_id", "group_name"],
+        "artist_urls": ["artist_id", "url", "page_type"]
     }
 label = \
     {
@@ -68,6 +69,8 @@ class Exporter:
                 values = curr.get_release_tracks(log, False)
             elif method_name == "get_label_urls":
                 values = curr.get_label_urls(log, False)
+            elif method_name == "get_artist_urls":
+                values = curr.get_artist_urls(log, False)
             else:
                 instance_method = getattr(curr, method_name)
                 values = instance_method()
