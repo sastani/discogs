@@ -1,7 +1,7 @@
 from lxml import etree
 from models.label import Label
 from database.loaders.export import Exporter
-from utils import find_id, find_name
+from parsers.utils import find_id, find_name
 def parse_xml(file_name):
     #context = etree.iterparse(file_name, events=('end',))
     #advance iterator to root element

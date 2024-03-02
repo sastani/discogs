@@ -48,7 +48,7 @@ def convert_duration(id, log, duration, duration_as_list):
         return None, None, None
     return hours, minutes, seconds
 
-def extract_webpage(id, log, url):
+def extract_webpage(id, log, url, entity):
     if '/' in url:
         url_parts = url.split('/')
         pattern = '.+//.+'
@@ -74,7 +74,7 @@ def extract_webpage(id, log, url):
             page_type = domain_parts[1]
     except Exception as err:
             print(f"Unexpected {err=}, {type(err)=}")
-            error_message = "extract_webpage() FAILED for label id: " + id + " with url: " + url + "\n"
+            error_message = "extract_webpage() FAILED for " + entity + " id: " + id + " with url: " + url + "\n"
             print(error_message)
             log.write(error_message)
             return None
@@ -90,9 +90,9 @@ def convert_name_to_list(name):
     name_list = [cleanup_name(n) for n in name_list if len(n) > 1]
     return name_list
 
-def get_webpage_type(id, log, name, url_path):
+def get_webpage_type(id, log, name, url_path, entity):
     is_valid = validate_url(url_path)
-    domain = extract_webpage(id, log, url_path)
+    domain = extract_webpage(id, log, url_path, entity)
     page_type = "other"
     if is_valid and domain is not None:
         social_pages = ['facebook', 'instagram', 'twitter', 'pinterest', 'tiktok', 'spotify', 'beatport', 'soundcloud',

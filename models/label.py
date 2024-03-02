@@ -40,7 +40,7 @@ class Label:
             if url not in seen_urls:
                 label_url_row = dict()
                 label_url_row['url'] = url
-                webpage_type = get_webpage_type(self.id, log, self.label_name.lower(), url.lower())
+                webpage_type = get_webpage_type(self.id, log, self.label_name.lower(), url.lower(), "label")
                 label_url_row['type'] = webpage_type
                 label_urls.append(label_url_row)
                 seen_urls.add(url)
