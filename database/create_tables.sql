@@ -22,7 +22,6 @@ CREATE TABLE artist_aliases(
 
 CREATE TABLE artist_groups(
     artist_id INT,
-    artist_name VARCHAR,
     group_artist_id INT,
     group_name VARCHAR
 )
