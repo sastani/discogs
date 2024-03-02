@@ -27,8 +27,16 @@ class Artist:
         return get_row(fields, values, test)
 
     def get_artist_name_variations(self, test=False):
+        #dont add duplicates
         fields = ["artist_id", "name"]
-        values = [(self.id, name_variation) for name_variation in self.get_name_variations()]
+        values = list()
+        seen_name_variations = set()
+        name_variations = self.get_name_variations()
+        for name_variation in name_variations:
+            if name_variation not in seen_name_variations:
+                fields = ["artist_id", "name"]
+                values.append((self.id, name_variation))
+            seen_name_variations.add(name_variation)
         return get_rows(fields, values, test)
 
     def get_artist_aliases(self, test=False):
