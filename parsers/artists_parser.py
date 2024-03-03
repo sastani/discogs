@@ -4,7 +4,7 @@ from models.artist import Artist
 from database.loaders.export import Exporter
 from parsers.utils import find_id, find_name
 
-def parse_xml(file_name):
+def parse_xml(file_name, chunk_size):
     #context = etree.iterparse(file_name, events=('start', 'end'))
     #advance iterator to root element
     #event, root = next(context)
@@ -61,6 +61,10 @@ def parse_xml(file_name):
                         artist_groups_row['group'] = group_element.text
                         groups.append(artist_groups_row)
             all_artists.append(artist)
+        element.clear()
+        if len(all_artists) == chunk_size:
+            E.load_all(all_artists, "artist")
+            all_artists = list()
     if all_artists:
         E.load_all(all_artists, "artist")
     E.close_connection()

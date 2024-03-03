@@ -22,8 +22,8 @@ class Artist:
         self.profile = profile
 
     def get_artist(self, test=False):
-        fields = ["id", "artist_name", "name", "quality", "profile"]
-        values = [self.id, self.artist_name, self.name, self.quality, self.profile]
+        fields = ["id", "artist_name", "name", "profile", "quality"]
+        values = [self.id, self.artist_name, self.name, self.profile, self.quality]
         return get_row(fields, values, test)
 
     def get_artist_name_variations(self, test=False):

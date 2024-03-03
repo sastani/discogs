@@ -17,7 +17,7 @@ def parse_xml(file_name):
         if label_id is not None and name is not None:
             label = Label(label_id, name)
             walk_context = etree.iterwalk(element, events=('end',))
-            for event_label, label_element in walk_context:
+            for label_element in walk_context:
                 tag = label_element.tag
                 text = label_element.text
                 if tag == "contactinfo":
@@ -45,6 +45,7 @@ def parse_xml(file_name):
                             label_sub_labels.append(sub_label_row)
                     label.set_sub_labels(label_sub_labels)
             all_labels.append(label)
+        element.clear()
     if all_labels:
         E.load_all(all_labels, "label")
     E.close_connection()
