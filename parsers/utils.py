@@ -5,12 +5,6 @@ def add_children(d, element):
         if val is not None:
             d[key] = val
 
-def add_children_only(d, element):
-    key = element.tag
-    val = element.text
-    if val is not None:
-        d[key] = val
-
 def find_id(element):
     i = element.find('id')
     if i is not None:

@@ -5,24 +5,16 @@ from database.loaders.export import Exporter
 
 def parse_xml(file_name, chunk_size):
     context = etree.iterparse(file_name, events=("end",), tag="release")
-
     all_releases = list()
     E = Exporter()
     for event, release_element in context:
         release_id = release_element.get('id')
         release_status = release_element.get('status')
         release = Release(release_id, release_status)
-        elem_as_string = etree.tostring(release_element)
-        #print("----------")
-        #print(elem_as_string)
         if event == "end":
             for child in release_element.iterchildren():
-                elem_as_string_2 = etree.tostring(child)
                 tag = child.tag
                 text = child.text
-                #print(elem_as_string_2)
-                #file.write("this is release: " + release_id + "\n")
-                #file.write("this is the element: " + str(elem_as_string) + "\n")
                 if tag == "images":
                     continue
                 elif tag == "artists":
@@ -30,10 +22,8 @@ def parse_xml(file_name, chunk_size):
                         artist_row = dict()
                         add_children(artist_row, artist)
                         release.get_artists().append(artist_row)
-                        # print(release.get_artists())
                 elif tag == "title":
                     release.set_title(text)
-                    # print(release.get_title())
                 elif tag == "labels":
                     for label in child.iterchildren():
                         label_row = label.attrib

@@ -5,11 +5,6 @@ from database.loaders.export import Exporter
 from parsers.utils import find_id, find_name
 
 def parse_xml(file_name, chunk_size):
-    #context = etree.iterparse(file_name, events=('start', 'end'))
-    #advance iterator to root element
-    #event, root = next(context)
-    #context = etree.iterwalk(root, events=('start','end'))
-    #advance iterator to release/child of root
     E = Exporter()
     all_artists = list()
     context = etree.iterparse(file_name, tag="artist")

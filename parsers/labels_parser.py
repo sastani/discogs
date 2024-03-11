@@ -3,11 +3,6 @@ from models.label import Label
 from database.loaders.export import Exporter
 from parsers.utils import find_id, find_name
 def parse_xml(file_name):
-    #context = etree.iterparse(file_name, events=('end',))
-    #advance iterator to root element
-    #event, root = next(context)
-    #context = etree.iterwalk(context, events=('end',))
-    #advance iterator to release/child of root
     E = Exporter()
     all_labels = list()
     context = etree.iterparse(file_name, tag="label")
