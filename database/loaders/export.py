@@ -2,8 +2,6 @@ import psycopg
 from psycopg import sql
 import os
 from dotenv import load_dotenv
-from collections import deque
-from models.release import Release
 
 load_dotenv()
 user = os.getenv("USERNAME")
@@ -80,8 +78,6 @@ class Exporter:
                  .format(sql.Identifier(table_name),
                          sql.SQL(', ').join(map(sql.Identifier, cols)),
                          sql.SQL(', ').join(sql.Placeholder() * len(cols))))
-        #print(query)
-        #print(table_values)
         return query, table_values
 
     def execute_query(self, query, table_values, flatten):
