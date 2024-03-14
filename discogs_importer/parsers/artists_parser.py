@@ -1,8 +1,7 @@
 from lxml import etree
-from collections import deque
-from models.artist import Artist
-from database.loaders.export import Exporter
-from parsers.utils import find_id, find_name
+from ..models.artist import Artist
+from ..database.loaders.export import Exporter
+from ..parsers.utils import find_id, find_name
 
 def parse_xml(file_name, chunk_size):
     E = Exporter()

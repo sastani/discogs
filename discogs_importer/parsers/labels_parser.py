@@ -1,7 +1,7 @@
 from lxml import etree
-from models.label import Label
-from database.loaders.export import Exporter
-from parsers.utils import find_id, find_name
+from ..models.label import Label
+from ..database.loaders.export import Exporter
+from ..parsers.utils import find_id, find_name
 def parse_xml(file_name):
     E = Exporter()
     all_labels = list()

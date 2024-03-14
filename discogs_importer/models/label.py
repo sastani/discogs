@@ -1,4 +1,4 @@
-from models.utils import get_row, get_rows, get_webpage_type
+from ..models.utils import get_row, get_rows, get_webpage_type
 class Label:
     def __init__(self, id, label_name):
         self.id = id

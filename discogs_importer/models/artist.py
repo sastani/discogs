@@ -1,4 +1,4 @@
-from models.utils import get_row, get_rows, get_webpage_type
+from ..models.utils import get_row, get_rows, get_webpage_type
 class Artist:
     def __init__(self, id, artist_name):
         self.id = id

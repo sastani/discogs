@@ -1,7 +1,7 @@
 from lxml import etree
-from models.release import Release
-from parsers.utils import *
-from database.loaders.export import Exporter
+from ..models.release import Release
+from ..parsers.utils import *
+from ..database.loaders.export import Exporter
 
 def parse_xml(file_name, chunk_size):
     context = etree.iterparse(file_name, events=("end",), tag="release")

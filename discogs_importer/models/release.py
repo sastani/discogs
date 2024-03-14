@@ -1,4 +1,4 @@
-from models.utils import get_row, get_rows, cleanup_duration, convert_duration
+from ..models.utils import get_row, get_rows, cleanup_duration, convert_duration
 class Release:
     def __init__(self, id, status):
         self.id = id
