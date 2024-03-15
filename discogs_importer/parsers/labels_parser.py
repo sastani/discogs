@@ -11,11 +11,16 @@ def parse_xml(file_name):
         name = find_name(element)
         if label_id is not None and name is not None:
             label = Label(label_id, name)
-            walk_context = etree.iterwalk(element, events=('end',))
-            for label_element in walk_context:
+            for label_element in element:
                 tag = label_element.tag
                 text = label_element.text
-                if tag == "contactinfo":
+                if tag == "images":
+                    continue
+                elif tag == "id":
+                    continue
+                elif tag == "name":
+                    continue
+                elif tag == "contactinfo":
                     label.set_contact_info(text)
                 elif tag == "profile":
                     label.set_profile(text)
