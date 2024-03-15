@@ -37,15 +37,15 @@ def parse_xml(file_name):
                             label_urls.append(url_path)
                 elif tag == "sublabels":
                     label_sub_labels = list()
-                    for sub_label in label_element:
-                        sub_label_row = sub_label.attrib
-                        sub_label_name = sub_label.text
-                        if sub_label_row:
-                            sub_label_row['name'] = sub_label_name
-                            label_sub_labels.append(sub_label_row)
+                    for sub_label_element in label_element:
+                        sub_label_row = dict()
+                        sub_label_row['id'] = sub_label_element.get('id')
+                        sub_label_row['name'] = sub_label_element.text
+                        label_sub_labels.append(sub_label_row)
                     label.set_sub_labels(label_sub_labels)
             all_labels.append(label)
-        element.clear()
+            #reset/remove element only after all children fully processed!
+            element.clear()
     if all_labels:
         E.load_all(all_labels, "label")
     E.close_connection()

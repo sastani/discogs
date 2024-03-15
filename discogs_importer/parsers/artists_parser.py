@@ -32,7 +32,6 @@ def parse_xml(file_name, chunk_size):
                     artist_urls = artist.get_urls()
                     for url_element in artist_element:
                         url_path = url_element.text
-                        print(url_path)
                         if url_path:
                             artist_urls.append(url_path)
                 elif tag == "namevariations":
@@ -55,7 +54,8 @@ def parse_xml(file_name, chunk_size):
                         artist_groups_row['group'] = group_element.text
                         groups.append(artist_groups_row)
             all_artists.append(artist)
-        element.clear()
+            #reset/remove element only after all children fully processed!
+            element.clear()
         if len(all_artists) == chunk_size:
             E.load_all(all_artists, "artist")
             all_artists = list()

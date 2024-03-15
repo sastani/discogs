@@ -10,7 +10,6 @@ class Label:
         self.quality = None
         self.profile = None
         self.url_strings = list()
-        self.sub_labels = list()
 
     def set_parent_label(self, id, parent):
         self.parent_label_id = id
@@ -51,8 +50,6 @@ class Label:
     def get_label_sublabels(self, test=False):
         fields = ["label_id", "sublabel", "sublabel_name"]
         label_sublabels = self.get_sub_labels()
-        print(self.id)
-        print(label_sublabels)
         if label_sublabels:
             values = [(self.id, sublabel.get("id"), sublabel.get("name")) for sublabel in label_sublabels]
             return get_rows(fields, values, test)
